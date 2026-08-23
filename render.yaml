@@ -10,7 +10,9 @@ services:
       - key: PYTHON_VERSION
         value: 3.10.0
 
-  - type: static
+  - type: web
     name: medos-frontend
+    env: static
+    plan: free
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: "frontend/dist"
