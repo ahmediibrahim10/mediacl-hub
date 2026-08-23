@@ -262,36 +262,41 @@ export default function App() {
       const textSnippet = lectureText.substring(0, 12000);
 
       if (selectedTask === 'mcqs') {
-        prompt = `You are an expert medical board examiner. Your task is to generate ${settings.mcqCount} high-yield Multiple Choice Questions (MCQs) based STRICTLY on the provided lecture notes.
+        prompt = `You are an expert USMLE medical board examiner and a top-tier medical professor in Egypt. Your task is to generate ${settings.mcqCount} high-yield Multiple Choice Questions (MCQs) based STRICTLY on the provided lecture notes.
+
+### LANGUAGE & STYLE REQUIREMENTS ###
+- The \`question\`, \`options\`, and \`correctAnswer\` MUST be written in formal Medical English.
+- The \`explanation\` (for both the correct answer and distractors) MUST be written in a friendly, engaging Egyptian Arabic dialect, while keeping all medical terms, disease names, and drugs in English. Act like a friendly Egyptian doctor explaining the concepts clearly to a medical student.
 
 ### CONFIGURATION ###
 - Difficulty Level: ${settings.difficulty}
 - Question Type Focus: ${settings.quizType}
 
-### DIFFICULTY GUIDELINES ###
-- If "Easy": Write first-order questions. Direct associations and 1-step reasoning (e.g., Presentation -> Diagnosis).
-- If "Medium": Write second-order questions. 2-step reasoning (e.g., Presentation -> Diagnosis -> Mechanism or Treatment).
-- If "Hard": Write third-order questions. Complex clinical scenarios, subtle differences between options, and classic exam traps. All options should seem plausible.
+### DIFFICULTY & DISTRACTOR GUIDELINES ###
+- Easy: First-order questions (e.g., Presentation -> Diagnosis).
+- Medium: Second-order questions (e.g., Presentation -> Diagnosis -> Mechanism/Treatment).
+- Hard: Third-order questions. Complex clinical scenarios with extremely plausible distractors based on common student misconceptions.
+- ALL distractors MUST be realistic clinical entities, not fabricated or obvious throwaway terms.
 
 ### QUESTION TYPE GUIDELINES ###
-- If "Direct Recall": Focus on memorization facts, pathognomonic signs, normal ranges, drug side effects, or direct associations. Do not use long clinical vignettes.
-- If "Conceptual": Focus on pathophysiology, mechanisms of action, "why" something happens, or what happens if a physiological pathway is blocked.
-- If "Except / Least Likely": Write questions testing exclusion. Format must be "All of the following are true EXCEPT..." or "Which of the following is the LEAST likely...". Provide 3 correct statements and 1 false statement.
-- If "Mixed": Create a balanced mix of Direct Recall, Conceptual, and Except questions.
+- Direct Recall: Focus on memorization facts, pathognomonic signs, normal ranges, drug side effects, or direct associations. Do not use long clinical vignettes.
+- Conceptual: Focus on pathophysiology, mechanisms of action, "why" something happens, or what happens if a physiological pathway is blocked.
+- Except / Least Likely: Write questions testing exclusion. Format must be "All of the following are true EXCEPT..." or "Which of the following is the LEAST likely...". Provide 3 correct statements and 1 false statement.
+- Mixed: Create a balanced mix of Direct Recall, Conceptual, and Except questions.
 
 ### OUTPUT FORMAT ###
 Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`json.
 [
   {
-    "question": "The question text...",
+    "question": "The question text in English...",
     "options": ["Option A", "Option B", "Option C", "Option D"],
     "correctAnswer": "Exact text of the correct choice",
     "explanation": {
-      "correct": "Clinical reasoning explaining why this choice is correct...",
+      "correct": "شرح تفصيلي بالعامية المصرية مع مصطلحات إنجليزية يوضح ليه الإجابة دي صح...",
       "distractors": {
-        "Option X": "Why X is incorrect...",
-        "Option Y": "Why Y is incorrect...",
-        "Option Z": "Why Z is incorrect..."
+        "Option X": "ليه الاختيار ده غلط بالعامية المصرية...",
+        "Option Y": "ليه الاختيار ده غلط...",
+        "Option Z": "ليه الاختيار ده غلط..."
       }
     },
     "topic": "Main medical topic",
