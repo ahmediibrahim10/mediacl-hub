@@ -1395,7 +1395,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                     <div
                       key={dateStr}
                       onClick={() => setSelectedCalendarDay(isSelected ? null : dateStr)}
-                      className={`h-20 p-1.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between select-none ${
+                      className={"h-20 p-1.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between select-none " + (
                         isSelected
                           ? 'border-teal-500 ring-2 ring-teal-500/20 bg-teal-50/60 dark:bg-teal-900/30'
                           : isToday
@@ -1403,9 +1403,10 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                             : dayReviews.length > 0
                               ? 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 hover:border-teal-300'
                               : 'border-slate-100 dark:border-slate-800/40 bg-slate-50/40 dark:bg-slate-900/40 opacity-75'
-                      }`}
-<div className="flex justify-between items-center">
-                        <span className={`text-xs ${isToday ? 'px-1.5 py-0.5 rounded-full bg-amber-500 text-white font-extrabold text-[10px]' : 'font-bold'}`}>
+                      )}
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className={"text-xs " + (isToday ? 'px-1.5 py-0.5 rounded-full bg-amber-500 text-white font-extrabold text-[10px]' : 'font-bold')}>
                           {dayNumber}
                         </span>
                       </div>
@@ -1416,11 +1417,11 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                           return (
                             <div 
                               key={rIdx} 
-                              className={`text-[9px] truncate px-1 py-0.5 rounded flex items-center gap-1 ${
+                              className={"text-[9px] truncate px-1 py-0.5 rounded flex items-center gap-1 " + (
                                 item.review.is_completed 
                                   ? 'bg-emerald-100/60 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 line-through' 
                                   : 'bg-slate-100 dark:bg-slate-700/80 text-slate-700 dark:text-slate-300 font-medium'
-                              }`}
+                              )}
                             >
                               <span>{cfg.icon}</span>
                               <span className="truncate">{item.plan.name}</span>
@@ -1575,12 +1576,12 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                       <div 
                         key={i} 
                         onClick={() => setSelectedCalendarDay(d.dateStr)}
-                        className={`aspect-square p-1 sm:p-2 rounded-xl border flex flex-col items-center justify-center cursor-pointer transition-all ${
+                        className={"aspect-square p-1 sm:p-2 rounded-xl border flex flex-col items-center justify-center cursor-pointer transition-all " + (
                           isSelected ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-500/20' : 
                           hasItems ? 'border-emerald-200 bg-emerald-50/30 hover:border-emerald-300' : 'border-slate-100 bg-white hover:bg-slate-50'
-                        }`}
+                        )}
                       >
-                        <span className={`text-sm sm:text-base font-bold ${isSelected ? 'text-blue-700' : 'text-slate-700'}`}>{d.dayNumber}</span>
+                        <span className={"text-sm sm:text-base font-bold " + (isSelected ? 'text-blue-700' : 'text-slate-700')}>{d.dayNumber}</span>
                         {hasItems && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1"></div>}
                       </div>
                     );
@@ -1640,11 +1641,11 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                 <button
                   key={item.id}
                   onClick={() => setCurrentRoute(item.id)}
-                  className={`p-3 rounded-2xl transition-all w-full flex justify-center ${
+                  className={"p-3 rounded-2xl transition-all w-full flex justify-center " + (
                     isActive 
                       ? 'bg-blue-50 text-blue-600 font-bold' 
                       : 'text-slate-400 hover:bg-slate-50 hover:text-slate-600'
-                  }`}
+                  )}
                   title={item.label}
                 >
                   {item.icon}
@@ -1687,7 +1688,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                   <span>{userStats.xp % 500} / 500</span>
                 </div>
                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-500 rounded-full transition-all duration-500" style={{ width: `${((userStats.xp % 500) / 500) * 100}%` }}></div>
+                  <div className="h-full bg-blue-500 rounded-full transition-all duration-500" style={{ width: (((userStats.xp % 500) / 500) * 100) + '%' }}></div>
                 </div>
               </div>
               {/* Streak */}
@@ -1886,7 +1887,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                         <div>
                           <h4 className="font-bold text-sm text-slate-900 dark:text-white">{file.name}</h4>
                           <p className="text-xs text-slate-500">
-                            {isExtractingPdf ? `${t.generator.extracting} ${pdfExtractionProgress?.current || 0}/${pdfExtractionProgress?.total || 0} ${t.generator.pages}` : `${t.generator.extractedChars} ${lectureText.length}`}
+                            {isExtractingPdf ? (t.generator.extracting + ' ' + (pdfExtractionProgress?.current || 0) + '/' + (pdfExtractionProgress?.total || 0) + ' ' + t.generator.pages) : (t.generator.extractedChars + ' ' + lectureText.length)}
                           </p>
                         </div>
                       </div>
@@ -2096,11 +2097,11 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                     <button 
                       key={tab.id} 
                       onClick={() => setTaskFilter(tab.id)} 
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                      className={"px-3 py-1.5 rounded-xl text-xs font-bold transition-colors " + (
                         taskFilter === tab.id 
                           ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300' 
                           : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
+                      )}
                     >
                       {tab.label} ({tab.count})
                     </button>
@@ -2119,15 +2120,15 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                         <div className="flex items-center gap-3 flex-1">
                           <button 
                             onClick={() => toggleTaskCompletion(taskItem.id)} 
-                            className={`w-6 h-6 rounded-lg flex items-center justify-center border transition-all ${
+                            className={"w-6 h-6 rounded-lg flex items-center justify-center border transition-all " + (
                               taskItem.is_completed 
                                 ? 'bg-teal-600 border-teal-600 text-white' 
                                 : 'border-slate-300 dark:border-slate-700 hover:border-teal-500'
-                            }`}
+                            )}
                           >
                             {taskItem.is_completed && <Check size={14}/>}
                           </button>
-                          <span className={`text-sm font-medium ${taskItem.is_completed ? 'line-through text-slate-400' : 'text-slate-900 dark:text-slate-100'}`}>
+                          <span className={"text-sm font-medium " + (taskItem.is_completed ? 'line-through text-slate-400' : 'text-slate-900 dark:text-slate-100')}>
                             {taskItem.title}
                           </span>
                         </div>
@@ -2220,7 +2221,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                     {/* PDF Upload Button */}
                     <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-teal-300 dark:border-teal-700 bg-teal-50/50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 text-xs font-bold hover:bg-teal-100 transition-all">
                       <UploadCloud size={15}/>
-                      <span>{isExtractingPlannerPdf ? `${t.planner.extractingPdf} ${plannerPdfProgress?.current || 0}/${plannerPdfProgress?.total || 0}` : t.planner.uploadPdfBtn}</span>
+                      <span>{isExtractingPlannerPdf ? (t.planner.extractingPdf + ' ' + (plannerPdfProgress?.current || 0) + '/' + (plannerPdfProgress?.total || 0)) : t.planner.uploadPdfBtn}</span>
                       <input 
                         type="file" 
                         accept=".pdf,.txt,.md" 
@@ -2280,14 +2281,14 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                   <button
                     type="button"
                     onClick={() => setPlannerTab('today')}
-                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                    className={"px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 " + (
                       plannerTab === 'today'
                         ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20'
                         : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
-                    }`}
+                    )}
                   >
                     <span>{t.planner.todayAgendaTitle}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${plannerTab === 'today' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>
+                    <span className={"text-xs px-2 py-0.5 rounded-full " + (plannerTab === 'today' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>
                       {todayDueList.length}
                     </span>
                   </button>
@@ -2295,14 +2296,14 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                   <button
                     type="button"
                     onClick={() => setPlannerTab('all')}
-                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                    className={"px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 " + (
                       plannerTab === 'all'
                         ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20'
                         : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
-                    }`}
+                    )}
                   >
                     <span>{t.planner.allPlansTab}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${plannerTab === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>
+                    <span className={"text-xs px-2 py-0.5 rounded-full " + (plannerTab === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300')}>
                       {plans.length}
                     </span>
                   </button>
@@ -2336,11 +2337,11 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                                     <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300">
                                       {plan.module_name} • {plan.subject_name}
                                     </span>
-                                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
+                                    <span className={"text-[10px] font-extrabold px-2 py-0.5 rounded-full " + (
                                       isOverdue 
                                         ? 'bg-rose-100 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400' 
                                         : 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300'
-                                    }`}>
+                                    )}>
                                       {isOverdue ? (appLanguage === 'ar' ? 'متأخرة' : 'Overdue') : (appLanguage === 'ar' ? 'مستحقة اليوم' : 'Due Today')}
                                     </span>
                                   </div>
@@ -2434,7 +2435,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                                 <div className="text-right">
                                   <span className="text-xs font-bold text-teal-600">{completedCount}/7 {t.planner.reviewsCount}</span>
                                   <div className="w-28 bg-slate-100 dark:bg-slate-800 h-2 rounded-full mt-1 overflow-hidden">
-                                    <div className="bg-teal-600 h-full rounded-full transition-all" style={{ width: `${progressPct}%` }}></div>
+                                    <div className="bg-teal-600 h-full rounded-full transition-all" style={{ width: (progressPct) + '%' }}></div>
                                   </div>
                                 </div>
                                 <Button variant="danger" className="p-2" onClick={() => deletePlan(plan.id)}>
@@ -2453,13 +2454,13 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                                   <div 
                                     key={rev.id} 
                                     onClick={() => setActiveReviewModal({ plan, review: rev })}
-                                    className={`p-3 rounded-xl border text-center cursor-pointer transition-all select-none hover:shadow-md ${
+                                    className={"p-3 rounded-xl border text-center cursor-pointer transition-all select-none hover:shadow-md " + (
                                       rev.is_completed 
                                         ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300' 
                                         : isPastOrToday 
                                           ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-300 ring-2 ring-amber-400/20' 
                                           : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
-                                    }`}
+                                    )}
                                   >
                                     <div className="text-lg mb-1">{rev.is_completed ? <Check size={18} className="text-emerald-500"/> : REVIEW_ICON_MAP[config.iconName] || <Activity size={18}/>}</div>
                                     <span className="text-[11px] font-bold block truncate">{config.title.split(':')[0]}</span>
@@ -2554,22 +2555,22 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                     <button
                       type="button"
                       onClick={() => setAppLanguage('en')}
-                      className={`p-3.5 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+                      className={"p-3.5 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all " + (
                         appLanguage === 'en'
                           ? 'bg-teal-50 dark:bg-teal-900/30 border-teal-500 text-teal-700 dark:text-teal-300 ring-2 ring-teal-500/20 shadow-sm'
                           : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
-                      }`}
+                      )}
                     >
                       <span>EN / English</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setAppLanguage('ar')}
-                      className={`p-3.5 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+                      className={"p-3.5 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all " + (
                         appLanguage === 'ar'
                           ? 'bg-teal-50 dark:bg-teal-900/30 border-teal-500 text-teal-700 dark:text-teal-300 ring-2 ring-teal-500/20 shadow-sm'
                           : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
-                      }`}
+                      )}
                     >
                       <span>AR / عامية مصرية</span>
                     </button>
