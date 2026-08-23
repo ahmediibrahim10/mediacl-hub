@@ -180,7 +180,11 @@ export default function App() {
   const [mistakes, setMistakes] = useState(() => JSON.parse(localStorage.getItem('medos_mistakes') || '[]'));
 
   // Form Inputs
-  const [settings] = useState({ mcqCount: '5' });
+  const [settings, setSettings] = useState({ 
+    mcqCount: '5', 
+    difficulty: 'Medium', 
+    quizType: 'Mixed' 
+  });
   const [newTaskInput, setNewTaskInput] = useState('');
   const [taskFilter, setTaskFilter] = useState('all'); // all, active, completed
   const [newLecture, setNewLecture] = useState('');
@@ -258,28 +262,47 @@ export default function App() {
       const textSnippet = lectureText.substring(0, 12000);
 
       if (selectedTask === 'mcqs') {
-        prompt = `Generate ${settings.mcqCount} high-yield USMLE Step 1 / Step 2 CK style Multiple Choice Questions based on this lecture:
-        ${textSnippet}
-        
-        Return strictly valid JSON array format without any markdown wrappers:
-        [
-          {
-            "question": "Vignette style clinical or mechanistic question...",
-            "options": ["Choice A", "Choice B", "Choice C", "Choice D"],
-            "correctAnswer": "Exact text of the correct choice from options",
-            "explanation": {
-              "correct": "Why this choice is correct...",
-              "distractors": {
-                "Choice B": "Why Choice B is incorrect...",
-                "Choice C": "Why Choice C is incorrect...",
-                "Choice D": "Why Choice D is incorrect..."
-              }
-            },
-            "topic": "Cardiology / Pathology...",
-            "concept": "High-Yield Mechanism",
-            "keywords": ["Pathognomonic sign", "Disease"]
-          }
-        ]`;
+        prompt = `You are an expert medical board examiner. Your task is to generate ${settings.mcqCount} high-yield Multiple Choice Questions (MCQs) based STRICTLY on the provided lecture notes.
+
+### CONFIGURATION ###
+- Difficulty Level: ${settings.difficulty}
+- Question Type Focus: ${settings.quizType}
+
+### DIFFICULTY GUIDELINES ###
+- If "Easy": Write first-order questions. Direct associations and 1-step reasoning (e.g., Presentation -> Diagnosis).
+- If "Medium": Write second-order questions. 2-step reasoning (e.g., Presentation -> Diagnosis -> Mechanism or Treatment).
+- If "Hard": Write third-order questions. Complex clinical scenarios, subtle differences between options, and classic exam traps. All options should seem plausible.
+
+### QUESTION TYPE GUIDELINES ###
+- If "Direct Recall": Focus on memorization facts, pathognomonic signs, normal ranges, drug side effects, or direct associations. Do not use long clinical vignettes.
+- If "Conceptual": Focus on pathophysiology, mechanisms of action, "why" something happens, or what happens if a physiological pathway is blocked.
+- If "Except / Least Likely": Write questions testing exclusion. Format must be "All of the following are true EXCEPT..." or "Which of the following is the LEAST likely...". Provide 3 correct statements and 1 false statement.
+- If "Mixed": Create a balanced mix of Direct Recall, Conceptual, and Except questions.
+
+### OUTPUT FORMAT ###
+Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`json.
+[
+  {
+    "question": "The question text...",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correctAnswer": "Exact text of the correct choice",
+    "explanation": {
+      "correct": "Clinical reasoning explaining why this choice is correct...",
+      "distractors": {
+        "Option X": "Why X is incorrect...",
+        "Option Y": "Why Y is incorrect...",
+        "Option Z": "Why Z is incorrect..."
+      }
+    },
+    "topic": "Main medical topic",
+    "concept": "The core concept being tested",
+    "type": "Identify the type used (Recall, Conceptual, Except)",
+    "difficulty": "${settings.difficulty}"
+  }
+]
+
+### LECTURE NOTES ###
+${textSnippet}`;
       } else if (selectedTask === 'cases') {
         prompt = `Generate 4 realistic USMLE clinical vignette cases based on this lecture:
         ${textSnippet}
@@ -683,6 +706,55 @@ export default function App() {
                       <Button variant="danger" onClick={() => { setFile(null); setLectureText(''); setGeneratedPayload(null); }}>
                         Remove
                       </Button>
+                    </Card>
+                  )}
+
+                  {/* MCQ Configuration Panel */}
+                  {selectedTask === 'mcqs' && (
+                    <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                      <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 block">
+                        ⚙️ MCQ Configuration
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                          <label className="text-xs font-bold text-slate-500 mb-1 block">Question Count</label>
+                          <select 
+                            value={settings.mcqCount} 
+                            onChange={e => setSettings(prev => ({ ...prev, mcqCount: e.target.value }))}
+                            className="w-full p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500 text-slate-900 dark:text-slate-100"
+                          >
+                            <option value="3">3 Questions</option>
+                            <option value="5">5 Questions</option>
+                            <option value="10">10 Questions</option>
+                            <option value="15">15 Questions</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs font-bold text-slate-500 mb-1 block">Quiz Type</label>
+                          <select 
+                            value={settings.quizType} 
+                            onChange={e => setSettings(prev => ({ ...prev, quizType: e.target.value }))}
+                            className="w-full p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500 text-slate-900 dark:text-slate-100"
+                          >
+                            <option value="Mixed">Mixed</option>
+                            <option value="Direct Recall">Direct Recall</option>
+                            <option value="Conceptual">Conceptual</option>
+                            <option value="Except / Least Likely">Except / Least Likely</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs font-bold text-slate-500 mb-1 block">Difficulty</label>
+                          <select 
+                            value={settings.difficulty} 
+                            onChange={e => setSettings(prev => ({ ...prev, difficulty: e.target.value }))}
+                            className="w-full p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500 text-slate-900 dark:text-slate-100"
+                          >
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                          </select>
+                        </div>
+                      </div>
                     </Card>
                   )}
 
