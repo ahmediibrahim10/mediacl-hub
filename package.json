@@ -1,0 +1,13 @@
+{
+  "name": "medos-platform",
+  "version": "1.0.0",
+  "description": "MedOS - Full Stack Medical AI Application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"cd backend && python -m uvicorn main:app --reload --port 8000\" \"cd frontend && npm run dev\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
