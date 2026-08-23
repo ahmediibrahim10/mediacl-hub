@@ -4,7 +4,7 @@ import {
   Trash2, Loader2, Play, CheckCircle, ChevronRight, 
   Home, Plus, Settings, CheckSquare, Moon, Sun, 
   CalendarDays, X, Pause, RotateCcw, Activity, Key,
-  Check, ArrowRight
+  Check, ArrowRight, Sparkles
 } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Button, Card, ErrorBoundary } from './components/ui';
@@ -183,7 +183,8 @@ export default function App() {
   const [settings, setSettings] = useState({ 
     mcqCount: '5', 
     difficulty: 'Medium', 
-    quizType: 'Mixed' 
+    quizType: 'Mixed',
+    summaryDepth: 'Deep Dive'
   });
   const [newTaskInput, setNewTaskInput] = useState('');
   const [taskFilter, setTaskFilter] = useState('all'); // all, active, completed
@@ -341,19 +342,47 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
 ### LECTURE NOTES ###
 ${textSnippet}`;
       } else if (selectedTask === 'summary') {
-        prompt = `Generate a smart, high-yield summary for medical students in Egyptian Arabic mixed with English medical terminology based on this lecture:
-        ${textSnippet}
-        
-        Return strictly valid JSON object:
-        {
-          "topic": "Lecture Core Topic",
-          "what_it_means": "شرح مبسط وواضح للمرض والمفهوم الأساسي بالعامية الطبية والمصطلحات...",
-          "why_it_happens": "Pathophysiology and Mechanism explained simply...",
-          "presentation": "Classic Symptoms, Signs, Triads...",
-          "diagnosis": "Best Initial Test, Gold Standard, Lab findings...",
-          "management": "First-line Treatment, Urgent interventions...",
-          "exam_traps": "فخاخ الامتحانات وأشهر أخطاء الأسئلة..."
-        }`;
+        prompt = `You are an expert medical professor. Generate a high-yield summary for medical students based strictly on this lecture:
+${textSnippet}
+
+### SUMMARY DEPTH & STYLE ###
+Selected Depth: ${settings.summaryDepth}
+- If "Quick Review": Write ONLY ultra-concise bullet points, high-yield keywords, and bolded terms. Skip long explanations.
+- If "Deep Dive": Write detailed, conversational explanations using friendly Egyptian Arabic mixed with Medical English. Explain every mechanism thoroughly.
+
+### OUTPUT FORMAT ###
+Return a STRICTLY VALID JSON array containing ONE object. Do NOT wrap in markdown blocks like \`\`\`json.
+[
+  {
+    "topic": "Lecture Core Topic",
+    "what_it_means": "Definition based on the selected depth...",
+    "why_it_happens": "Pathophysiology based on the selected depth...",
+    "presentation": "Clinical features based on the selected depth...",
+    "diagnosis": "Investigations based on the selected depth...",
+    "management": "Treatment based on the selected depth...",
+    "exam_traps": "Pitfalls and high-yield traps..."
+  }
+]
+`;
+      } else if (selectedTask === 'mnemonics') {
+        prompt = `You are a clever medical student in Egypt famous for creating unforgettable memory aids and mnemonics. Generate 4 to 6 creative medical mnemonics based on this lecture:
+${textSnippet}
+
+### GUIDELINES ###
+- Create mnemonics for the most difficult lists to remember (e.g., causes, drug side effects, symptoms).
+- You can use English acronyms (like "MUDPILES") or creative Egyptian Arabic phrases that link the concepts together (تحشيشات طبية).
+- Explain exactly what each letter or word stands for.
+
+### OUTPUT FORMAT ###
+Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`json.
+[
+  {
+    "concept": "What are we trying to remember? (e.g., Causes of Acute Pancreatitis)",
+    "mnemonic": "The acronym or funny phrase (e.g., GET SMASHED)",
+    "breakdown": "G - Gallstones, E - Ethanol, T - Trauma, etc. (Explain each part clearly in English and Egyptian Arabic)"
+  }
+]
+`;
       } else {
         // Anki Flashcards
         prompt = `Generate 8 high-yield active-recall Anki flashcards for spaced repetition retention based on:
@@ -378,6 +407,7 @@ ${textSnippet}`;
       if (selectedTask === 'mcqs') normalized = NormalizationEngine.mcqs(parsed);
       else if (selectedTask === 'cases') normalized = NormalizationEngine.cases(parsed);
       else if (selectedTask === 'summary') normalized = NormalizationEngine.summary(parsed);
+      else if (selectedTask === 'mnemonics') normalized = NormalizationEngine.mnemonics(parsed);
       else normalized = NormalizationEngine.anki(parsed);
 
       setGeneratedPayload(normalized);
@@ -486,6 +516,7 @@ ${textSnippet}`;
     { id: 'cases', name: 'Clinical Cases', desc: 'USMLE Step 2 CK vignettes and diagnostic decision trees.', icon: <Stethoscope size={28} /> },
     { id: 'summary', name: 'Smart Summary', desc: 'Egyptian Arabic medical tutoring and interactive PDF chat.', icon: <BookOpen size={28} /> },
     { id: 'anki', name: 'Anki Flashcards', desc: 'Active recall spaced-repetition flashcards with CSV export.', icon: <BrainCircuit size={28} /> },
+    { id: 'mnemonics', name: 'Mnemonics Generator', desc: 'Generate creative memory aids, acronyms, and Egyptian medical mnemonics.', icon: <Sparkles size={28} /> },
   ];
 
   return (
@@ -746,6 +777,20 @@ ${textSnippet}`;
                         </select>
                       </div>
 
+                      {selectedTask === 'summary' && (
+                        <div>
+                          <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">Summary Depth</label>
+                          <select 
+                            value={settings.summaryDepth} 
+                            onChange={e => setSettings(prev => ({ ...prev, summaryDepth: e.target.value }))}
+                            className="w-full p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500 text-slate-900 dark:text-slate-100"
+                          >
+                            <option value="Quick Review">Quick Review</option>
+                            <option value="Deep Dive">Deep Dive</option>
+                          </select>
+                        </div>
+                      )}
+
                       {selectedTask === 'mcqs' && (
                         <div>
                           <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">MCQ Quiz Type</label>
@@ -835,6 +880,38 @@ ${textSnippet}`;
                       <div className="space-y-4">
                         <h3 className="font-bold text-xl">Anki Active Recall Flashcards ({generatedPayload.length})</h3>
                         <AnkiWorkspace initialCards={generatedPayload} fileName={file?.name?.replace(/\.[^/.]+$/, '') || 'MedOS_Anki_Deck'} />
+                      </div>
+                    )}
+
+                    {selectedTask === 'mnemonics' && (
+                      <div className="space-y-4">
+                        <h3 className="font-bold text-xl flex items-center gap-2">
+                          <Sparkles className="text-amber-500" size={22}/> Creative Medical Mnemonics & Memory Aids ({generatedPayload.length})
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          {generatedPayload.map((item, idx) => (
+                            <Card key={item.id || idx} className="p-6 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm hover:border-teal-500/50 transition-all">
+                              <div className="flex justify-between items-start">
+                                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">
+                                  Mnemonic #{idx + 1}
+                                </span>
+                              </div>
+                              <h4 className="font-bold text-base text-slate-900 dark:text-white leading-snug">
+                                {item.concept}
+                              </h4>
+                              <div className="p-4 rounded-2xl bg-teal-50 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-800 text-center">
+                                <span className="text-xs font-bold uppercase tracking-widest text-teal-700 dark:text-teal-400 block mb-1">Memory Hook</span>
+                                <span className="text-xl font-extrabold text-teal-900 dark:text-teal-200 tracking-wide font-mono">
+                                  {item.mnemonic}
+                                </span>
+                              </div>
+                              <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap pt-1">
+                                <span className="font-bold text-xs text-slate-500 dark:text-slate-400 block mb-1">Breakdown & Explanation:</span>
+                                {item.breakdown}
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>

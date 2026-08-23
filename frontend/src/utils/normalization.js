@@ -88,6 +88,16 @@ export const NormalizationEngine = {
       back: item.back || item.answer || item.explanation || "Answer",
       topic: item.topic || "High-Yield"
     }));
+  },
+
+  mnemonics: (data) => {
+    if (!Array.isArray(data)) data = [data];
+    return data.filter(Boolean).map((item, idx) => ({
+      id: item.id || `mnemonic-${Date.now()}-${idx}`,
+      concept: item.concept || item.topic || "High-Yield Concept",
+      mnemonic: item.mnemonic || item.acronym || "MNEMONIC",
+      breakdown: item.breakdown || item.explanation || item.details || ""
+    }));
   }
 };
 
