@@ -9,5 +9,11 @@
     "dev": "cd frontend && npm run dev",
     "preview": "cd frontend && npm run preview",
     "lint": "cd frontend && npm run lint"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
+    "framer-motion": "^13.1.1",
+    "three": "^0.185.1"
   }
 }
