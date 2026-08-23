@@ -309,24 +309,37 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
 ### LECTURE NOTES ###
 ${textSnippet}`;
       } else if (selectedTask === 'cases') {
-        prompt = `Generate 4 realistic USMLE clinical vignette cases based on this lecture:
-        ${textSnippet}
-        
-        Return strictly valid JSON array format:
-        [
-          {
-            "vignette": "A 45-year-old male presents with...",
-            "question": "What is the most appropriate next step in management or most likely diagnosis?",
-            "options": ["Option A", "Option B", "Option C", "Option D"],
-            "correctAnswer": "Option A",
-            "explanation": {
-              "clinical_reasoning": "Step-by-step diagnostic reasoning..."
-            },
-            "key_takeaway": "Crucial high-yield clinical pearl",
-            "topic": "Internal Medicine",
-            "difficulty": "USMLE Step 2 CK"
-          }
-        ]`;
+        prompt = `You are an expert USMLE Step 2 CK board examiner and a senior Clinical Professor in Egypt. Your task is to generate 4 realistic, high-yield clinical vignette cases based STRICTLY on the provided lecture notes.
+
+### VIGNETTE STRUCTURE & LANGUAGE ###
+- The \`vignette\`, \`question\`, \`options\`, and \`correctAnswer\` MUST be written in formal, professional Medical English.
+- The vignette MUST follow the standard USMLE structure: Age & Gender -> Chief Complaint -> History of Present Illness (HPI) -> Past Medical History (PMH) -> Physical Exam (including Vitals) -> Labs/Imaging (if applicable).
+- The \`question\` should focus on clinical decision making (e.g., "What is the most appropriate next step in management?", "What is the best initial diagnostic test?", or "What is the most likely diagnosis?").
+- The \`clinical_reasoning\` (explanation) and \`key_takeaway\` MUST be written in a friendly, engaging Egyptian Arabic dialect, thoroughly explaining the diagnostic workflow and why the correct option is the best step, while keeping all medical terms, disease names, and drugs in English.
+
+### OUTPUT FORMAT ###
+Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`json.
+[
+  {
+    "vignette": "A 45-year-old male presents to the emergency department with...",
+    "question": "What is the most appropriate next step in management?",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correctAnswer": "Option A",
+    "explanation": {
+      "clinical_reasoning": "شرح تفصيلي بالعامية المصرية لخطوات التفكير السريري، وليه الخطوة دي هي الأهم دلوقتي، وليه باقي الاختيارات غلط أو مش وقتها...",
+      "distractors": {
+        "Option B": "ليه الاختيار ده غلط أو مش الخطوة الأولى...",
+        "Option C": "ليه الاختيار ده ميتعملش دلوقتي..."
+      }
+    },
+    "key_takeaway": "خلاصة سريعة جداً بالعامية المصرية (High-Yield Pearl) عن الفكرة اللي بيختبرها السؤال ده...",
+    "topic": "Internal Medicine / Surgery / etc.",
+    "difficulty": "USMLE Step 2 CK"
+  }
+]
+
+### LECTURE NOTES ###
+${textSnippet}`;
       } else if (selectedTask === 'summary') {
         prompt = `Generate a smart, high-yield summary for medical students in Egyptian Arabic mixed with English medical terminology based on this lecture:
         ${textSnippet}
