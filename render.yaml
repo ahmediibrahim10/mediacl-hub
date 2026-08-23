@@ -1,6 +1,6 @@
 services:
   - type: web
-  - name: medos-backend
+    name: medos-backend
     env: python
     region: frankfurt
     plan: free
@@ -11,7 +11,7 @@ services:
         value: 3.10.0
 
   - type: web
-  - name: medos-frontend
+    name: medos-frontend
     env: static
     region: frankfurt
     plan: free
