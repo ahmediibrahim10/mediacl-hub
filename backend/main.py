@@ -1,5 +1,5 @@
 """
-Medical Study AI - Backend Full (MedOS Advanced Virtual Patient & AI Case Generation)
+Medical Study AI - Backend Full (Unified FastAPI Server serving both API & React Frontend)
 """
 
 import json
@@ -12,6 +12,8 @@ from datetime import datetime, timedelta
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.concurrency import run_in_threadpool
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -22,7 +24,7 @@ from database import SessionLocal, MCQAttempt, TaskItem, StudyPlan, StudyReview,
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("medical-study-ai")
 
-app = FastAPI(title="Medical Study AI & Advanced MedPatient")
+app = FastAPI(title="Medical Study AI & Unified MedOS")
 
 origins = [
     "http://localhost:5173",
@@ -49,9 +51,9 @@ async def verify_api_key(x_api_key: Optional[str] = Header(None)):
         raise HTTPException(status_code=401, detail="Invalid API Key format. Must start with 'AIzaSy' or 'AQ.'")
     return x_api_key
 
-@app.get("/")
+@app.get("/api/health")
 def read_root():
-    return {"status": "Backend V3.5 (Advanced MedPatient) is running."}
+    return {"status": "Backend Unified V3.6 is running successfully."}
 
 @app.post("/generate/")
 async def generate_content(
@@ -87,7 +89,9 @@ async def generate_content(
             with open(file_path, "wb") as buffer:
                 while chunk := await file.read(1024 * 1024):
                     buffer.write(chunk)
-            document_text = await run_in_threadpool(extract_text_with_pages, file_path, api_key)
+            
+            max_p = int(parsed_settings.get("maxPages", 8))
+            document_text = await run_in_threadpool(extract_text_with_pages, file_path, api_key, max_p)
             if not document_text or len(document_text.strip()) < 50:
                 return {"success": False, "error": "الملف ده عبارة عن صور أو نصوصه غير مقروءة."}
             if document_text.startswith("ERROR"):
@@ -356,7 +360,7 @@ def update_task(payload: TaskUpdatePayload):
 
 @app.delete("/api/tasks/{task_id}")
 def delete_task(task_id: int):
-    db.SessionLocal()
+    db = SessionLocal()
     try:
         task = db.query(TaskItem).filter(TaskItem.id == task_id).first()
         if task:
@@ -365,3 +369,20 @@ def delete_task(task_id: int):
         return {"success": True}
     finally:
         db.close()
+
+
+# --- دمج واجهة الـ Frontend (React / Vite) لتعمل على نفس السيرفر ورابط واحد ---
+frontend_dist_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../frontend/dist"))
+
+if os.path.exists(frontend_dist_path):
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist_path, "assets")), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        if full_path.startswith("api/") or full_path.startswith("generate/"):
+            raise HTTPException(status_code=404)
+        
+        file_path = os.path.join(frontend_dist_path, full_path)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(frontend_dist_path, "index.html"))
