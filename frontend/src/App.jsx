@@ -727,15 +727,44 @@ ${textSnippet}`;
                     </Card>
                   )}
 
-                  {/* MCQ Configuration Panel */}
-                  {selectedTask === 'mcqs' && (
-                    <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
-                      <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 block">
-                        ⚙️ MCQ Configuration
-                      </span>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* Study Material Configuration Panel */}
+                  <Card className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 block">
+                      ⚙️ Generation Settings
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div>
+                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">Select Difficulty</label>
+                        <select 
+                          value={settings.difficulty} 
+                          onChange={e => setSettings(prev => ({ ...prev, difficulty: e.target.value }))}
+                          className="w-full p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500 text-slate-900 dark:text-slate-100"
+                        >
+                          <option value="Easy">Easy</option>
+                          <option value="Medium">Medium</option>
+                          <option value="Hard">Hard</option>
+                        </select>
+                      </div>
+
+                      {selectedTask === 'mcqs' && (
                         <div>
-                          <label className="text-xs font-bold text-slate-500 mb-1 block">Question Count</label>
+                          <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">MCQ Quiz Type</label>
+                          <select 
+                            value={settings.quizType} 
+                            onChange={e => setSettings(prev => ({ ...prev, quizType: e.target.value }))}
+                            className="w-full p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500 text-slate-900 dark:text-slate-100"
+                          >
+                            <option value="Direct Recall">Direct Recall</option>
+                            <option value="Conceptual">Conceptual</option>
+                            <option value="Except / Least Likely">Except / Least Likely</option>
+                            <option value="Mixed">Mixed</option>
+                          </select>
+                        </div>
+                      )}
+
+                      {selectedTask === 'mcqs' && (
+                        <div>
+                          <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">Question Count</label>
                           <select 
                             value={settings.mcqCount} 
                             onChange={e => setSettings(prev => ({ ...prev, mcqCount: e.target.value }))}
@@ -747,34 +776,9 @@ ${textSnippet}`;
                             <option value="15">15 Questions</option>
                           </select>
                         </div>
-                        <div>
-                          <label className="text-xs font-bold text-slate-500 mb-1 block">Quiz Type</label>
-                          <select 
-                            value={settings.quizType} 
-                            onChange={e => setSettings(prev => ({ ...prev, quizType: e.target.value }))}
-                            className="w-full p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500 text-slate-900 dark:text-slate-100"
-                          >
-                            <option value="Mixed">Mixed</option>
-                            <option value="Direct Recall">Direct Recall</option>
-                            <option value="Conceptual">Conceptual</option>
-                            <option value="Except / Least Likely">Except / Least Likely</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="text-xs font-bold text-slate-500 mb-1 block">Difficulty</label>
-                          <select 
-                            value={settings.difficulty} 
-                            onChange={e => setSettings(prev => ({ ...prev, difficulty: e.target.value }))}
-                            className="w-full p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500 text-slate-900 dark:text-slate-100"
-                          >
-                            <option value="Easy">Easy</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Hard">Hard</option>
-                          </select>
-                        </div>
-                      </div>
-                    </Card>
-                  )}
+                      )}
+                    </div>
+                  </Card>
 
                   {/* Generation Trigger Button */}
                   {(file || lectureText.trim().length > 0) && (

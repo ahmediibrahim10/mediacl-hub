@@ -189,6 +189,7 @@ export const ClinicalCaseRenderer = ({ data, idx = 1 }) => {
   
   const options = Array.isArray(data.options) ? data.options : [];
   const reasoning = typeof data.explanation === 'object' ? data.explanation?.clinical_reasoning : data.explanation;
+  const distractors = typeof data.explanation === 'object' && data.explanation?.distractors ? data.explanation.distractors : {};
   const keywords = data.keywords || [data.topic || ""];
 
   const isOptionCorrect = (opt, i) => {
@@ -251,8 +252,8 @@ export const ClinicalCaseRenderer = ({ data, idx = 1 }) => {
 
       {selected && (
         <div className="mt-6 space-y-4 animate-in fade-in">
-          <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
-            <div className="flex justify-between items-center mb-2">
+          <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 space-y-3">
+            <div className="flex justify-between items-center mb-1">
                <h4 className="font-bold text-blue-800 dark:text-blue-400 flex items-center"><BrainCircuit className="mr-2" size={16} /> Clinical Reasoning</h4>
                {keywords.length > 0 && (
                  <Button className="text-xs px-3 py-1 bg-white/50 dark:bg-slate-800" onClick={handleImageSearch} variant="secondary">
@@ -261,6 +262,21 @@ export const ClinicalCaseRenderer = ({ data, idx = 1 }) => {
                )}
             </div>
             <p className="text-sm text-blue-900/90 dark:text-blue-300/90 leading-relaxed">{typeof reasoning === 'string' ? reasoning : ""}</p>
+
+            {Object.keys(distractors).length > 0 && (
+              <div className="pt-3 border-t border-blue-200/60 dark:border-blue-900/40">
+                <span className="font-bold text-xs flex items-center gap-1.5 text-blue-950 dark:text-blue-200 mb-1.5">
+                  <AlertTriangle size={14} className="text-amber-500" /> Why other options are incorrect:
+                </span>
+                <ul className="list-disc pl-5 space-y-1.5 text-xs text-blue-900/90 dark:text-blue-300/90">
+                  {Object.entries(distractors).map(([key, reason]) => (
+                    <li key={key}>
+                      <strong className="font-bold text-blue-950 dark:text-blue-100">{key}:</strong> {typeof reason === 'string' ? reason : "..."}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           {data.key_takeaway && (
             <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30">
