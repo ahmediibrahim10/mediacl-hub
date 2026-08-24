@@ -135,7 +135,7 @@ export default function MedPatientView({ apiKey, onShowKeyModal, appLanguage = '
 
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
       const prompt = `Generate a realistic clinical case profile for a simulated Egyptian clinic patient in strictly valid JSON format.
 ${specialtyDirective}
 Patient Temperament Style: ${activeTemperament}
@@ -217,7 +217,7 @@ Return ONLY a JSON object with this exact structure:
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.0-flash",
         systemInstruction: `You are a patient in an Egyptian clinic speaking natural, authentic Egyptian Arabic dialect.
 Your case profile:
 - Age: ${patientSession.age}, Gender: ${patientSession.gender}
@@ -246,7 +246,7 @@ Stay strictly in character as a regular Egyptian person visiting a clinic/ER. Do
     setLabInput('');
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
       const prompt = `You are a Senior Hospital Radiologist and Clinical Pathology Consultant in Egypt.
 The diagnostic test requested: "${testName}".
 Patient Case Secret Context:
@@ -278,7 +278,7 @@ Provide a realistic lab or imaging report result for "${testName}". Format in fo
     setIsSeniorLoading(true);
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
       const prompt = `You are a friendly Egyptian Senior Medical Resident mentoring a junior student.
 Patient case:
 - True Hidden Diagnosis: ${patientSession.correct_diagnosis}
@@ -303,7 +303,7 @@ Provide a subtle, high‑yield clinical reasoning hint in conversational Egyptia
     setIsPatientLoading(true);
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
       const prompt = `You are a medical board examiner evaluating a medical student's diagnosis and treatment of a clinical case.
 Patient True Profile:
 - Correct Diagnosis: ${patientSession.correct_diagnosis}

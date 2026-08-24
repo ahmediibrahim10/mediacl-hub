@@ -322,7 +322,7 @@ export const SmartSummaryRenderer = ({ data, rawPdfText, apiKey }) => {
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.0-flash",
         systemInstruction: "You are a top Egyptian medical professor and tutor. Explain medical concepts clearly using friendly Egyptian Arabic mixed with precise English medical terminology. Answer questions based on the provided lecture/summary context."
       });
 
