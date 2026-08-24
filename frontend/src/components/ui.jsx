@@ -5,8 +5,8 @@ export function Card({ children, className = "", onClick, hover = true }) {
   return (
     <motion.div
       onClick={onClick}
-      whileHover={hover ? { y: -3, transition: { duration: 0.2 } } : {}}
-      className={`backdrop-blur-xl bg-slate-900/60 dark:bg-slate-900/60 border border-slate-800/80 hover:border-cyan-500/40 rounded-2xl shadow-xl shadow-black/30 transition-colors duration-300 ${className}`}
+      whileHover={hover ? { y: -5, scale: 1.02, transition: { duration: 0.2 } } : {}}
+      className={`bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] shadow-2xl rounded-3xl transition-all duration-300 ${className}`}
     >
       {children}
     </motion.div>
@@ -14,12 +14,12 @@ export function Card({ children, className = "", onClick, hover = true }) {
 }
 
 export function Button({ children, variant = "primary", className = "", onClick, disabled, icon }) {
-  const base = "px-4 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center transition-all cursor-pointer disabled:opacity-50 select-none";
+  const base = "px-4 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center transition-all duration-300 cursor-pointer disabled:opacity-50 select-none";
   const styles = {
-    primary: "bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white shadow-lg shadow-teal-900/30 border border-teal-500/30",
-    secondary: "bg-slate-800/80 text-slate-200 hover:bg-slate-700/90 border border-slate-700/80 hover:border-slate-600 shadow-sm",
-    danger: "bg-rose-950/40 text-rose-300 hover:bg-rose-900/50 border border-rose-800/50",
-    ghost: "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+    primary: "bg-cyan-500 text-slate-950 font-bold hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] border border-transparent",
+    secondary: "bg-white/[0.05] text-white hover:bg-white/[0.1] border border-white/[0.1] shadow-sm",
+    danger: "bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/30",
+    ghost: "text-slate-400 hover:text-white hover:bg-white/[0.05]"
   };
   return (
     <motion.button

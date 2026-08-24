@@ -1176,17 +1176,31 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
 
   return (
     <ErrorBoundary>
-
-        <div className="flex h-screen bg-slate-50 text-slate-800 font-sans relative overflow-hidden" dir={appLanguage === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="flex h-screen bg-[#0B0F19] text-white font-sans relative overflow-hidden" dir={appLanguage === 'ar' ? 'rtl' : 'ltr'}>
         
-        {/* The "Living" Mesh Background */}
-        <motion.div 
-          className="fixed inset-0 pointer-events-none z-0"
-          animate={{ backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'], scale: [1, 1.05, 1] }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-tr from-blue-50/40 via-transparent to-emerald-50/40 blur-[100px]" />
-        </motion.div>
+        {/* The "Premium Cyber" Background Blobs */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          {/* Neon Purple Blob */}
+          <motion.div 
+            className="absolute -top-1/4 -left-1/4 w-[800px] h-[800px] bg-purple-600/30 rounded-full blur-[120px]"
+            animate={{ 
+              x: [0, 100, 0], 
+              y: [0, -50, 0],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Electric Cyan Blob */}
+          <motion.div 
+            className="absolute -bottom-1/4 -right-1/4 w-[800px] h-[800px] bg-cyan-500/20 rounded-full blur-[120px]"
+            animate={{ 
+              x: [0, -100, 0], 
+              y: [0, 50, 0],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
         
         {/* Focus Timer Modal */}
         {activeFocusTask && (
@@ -1400,110 +1414,106 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
             
             {/* Dashboard View */}
             {currentRoute === 'dashboard' && (
-              <div className="space-y-8 animate-in fade-in">
-                {/* Minimalist Hero Banner */}
-                <div className="relative overflow-hidden rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 shadow-sm">
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in">
+                {/* Minimalist Hero Banner (Spans multiple columns) */}
+                <Card className="md:col-span-3 lg:col-span-4 p-8 relative overflow-hidden flex flex-col justify-center">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                    <div className="md:col-span-2 space-y-3 z-10">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold">
-                        <Sparkles size={14} className="text-blue-500 animate-pulse"/> MedOS Clinical AI & 3D Core
+                    <div className="md:col-span-2 space-y-4 z-10">
+                      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold">
+                        <Sparkles size={14} className="animate-pulse"/> MedOS Clinical AI & 3D Core
                       </div>
-                      <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
+                      <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
                         {t.dashboard.title}
                       </h2>
-                      <p className="text-sm text-slate-500 leading-relaxed max-w-lg">
+                      <p className="text-sm text-slate-400 leading-relaxed max-w-lg">
                         {t.dashboard.subtitle}
                       </p>
-                      <div className="pt-2 flex flex-wrap gap-3">
+                      <div className="pt-4 flex flex-wrap gap-4">
                         <Button 
                           variant="primary" 
                           onClick={() => setActiveFocusTask({ title: appLanguage === 'ar' ? "جلسة مذاكرة طبية مركزة" : "Deep Medical Study Session" })} 
-                          className="shadow-sm bg-blue-600 hover:bg-blue-700 py-3 px-6 text-sm font-bold"
+                          className="py-3 px-6 text-sm"
                         >
                           <Play size={16} className="mx-1"/> {t.dashboard.quickFocus}
                         </Button>
                         <Button
-                          variant="outline"
+                          variant="secondary"
                           onClick={() => setCurrentRoute('study_hub')}
-                          className="text-xs py-3 px-5 font-bold border-slate-200 text-slate-600 hover:bg-slate-50"
+                          className="py-3 px-6 text-sm"
                         >
-                          <BookOpen size={16} className="mx-1 text-blue-600"/> {t.dashboard.openStudyTools}
+                          <BookOpen size={16} className="mx-1 text-cyan-400"/> {t.dashboard.openStudyTools}
                         </Button>
                       </div>
                     </div>
-                    <div className="flex justify-center md:justify-end">
-                      <KnowledgeBrain3D userStats={userStats} className="transform scale-95 hover:scale-105 transition-transform duration-500" />
+                    <div className="flex justify-center md:justify-end z-10">
+                      <KnowledgeBrain3D userStats={userStats} className="transform scale-95" />
                     </div>
                   </div>
-                </div>
+                </Card>
 
-                {/* Minimalist Stat Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                  <Card className="p-6 border border-slate-100 bg-white shadow-sm rounded-3xl flex items-center justify-between">
-                    <div>
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t.dashboard.pendingTasks}</span>
-                      <h3 className="text-4xl font-extrabold text-slate-900 mt-1">{tasks.filter(t => !t.is_completed).length}</h3>
-                    </div>
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500">
-                      <CheckSquare size={24} />
-                    </div>
-                  </Card>
-                  
-                  <Card className="p-6 border border-slate-100 bg-white shadow-sm rounded-3xl flex items-center justify-between">
-                    <div>
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t.dashboard.dueReviews}</span>
-                      <h3 className="text-4xl font-extrabold text-slate-900 mt-1">{dueReviewsCount}</h3>
-                    </div>
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500">
-                      <RotateCcw size={24} />
-                    </div>
-                  </Card>
+                {/* Minimalist Stat Cards (Bento 1x1 cells) */}
+                <Card className="p-6 flex items-center justify-between col-span-1">
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t.dashboard.pendingTasks}</span>
+                    <h3 className="text-4xl font-extrabold text-white mt-1">{tasks.filter(t => !t.is_completed).length}</h3>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                    <CheckSquare size={24} />
+                  </div>
+                </Card>
+                
+                <Card className="p-6 flex items-center justify-between col-span-1">
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t.dashboard.dueReviews}</span>
+                    <h3 className="text-4xl font-extrabold text-white mt-1">{dueReviewsCount}</h3>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                    <RotateCcw size={24} />
+                  </div>
+                </Card>
 
-                  <Card className="p-6 border border-slate-100 bg-white shadow-sm rounded-3xl flex items-center justify-between">
-                    <div>
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t.dashboard.activePlans}</span>
-                      <h3 className="text-4xl font-extrabold text-slate-900 mt-1">{plans.length}</h3>
-                    </div>
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500">
-                      <CalendarDays size={24} />
-                    </div>
-                  </Card>
+                <Card className="p-6 flex items-center justify-between col-span-1">
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t.dashboard.activePlans}</span>
+                    <h3 className="text-4xl font-extrabold text-white mt-1">{plans.length}</h3>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                    <CalendarDays size={24} />
+                  </div>
+                </Card>
 
-                  <Card className="p-6 border border-slate-100 bg-white shadow-sm rounded-3xl flex items-center justify-between">
-                    <div>
-                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t.dashboard.mistakesTracked}</span>
-                      <h3 className="text-4xl font-extrabold text-slate-900 mt-1">{mistakes.length}</h3>
-                    </div>
-                    <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500">
-                      <Activity size={24} />
-                    </div>
-                  </Card>
-                </div>
+                <Card className="p-6 flex items-center justify-between col-span-1">
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t.dashboard.mistakesTracked}</span>
+                    <h3 className="text-4xl font-extrabold text-white mt-1">{mistakes.length}</h3>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.2)]">
+                    <Activity size={24} />
+                  </div>
+                </Card>
 
-                {/* Quick Navigation Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-                  <Card className="p-6 space-y-4 border border-slate-100 bg-white shadow-sm rounded-3xl hover:border-blue-200 hover:shadow-md transition-all cursor-pointer group" onClick={() => setCurrentRoute('study_hub')}>
-                    <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <BookOpen size={28}/>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg text-slate-900">{t.dashboard.generatorCardTitle}</h3>
-                      <p className="text-sm text-slate-500 mt-1">{t.dashboard.generatorCardDesc}</p>
-                    </div>
-                    <span className="text-sm font-bold text-blue-600 flex items-center gap-1">{t.dashboard.openStudyTools} <ArrowRight size={14}/></span>
-                  </Card>
+                {/* Quick Navigation Cards (Bento 2-col span) */}
+                <Card className="p-6 space-y-4 cursor-pointer group md:col-span-2 lg:col-span-2" onClick={() => setCurrentRoute('study_hub')}>
+                  <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                    <BookOpen size={28}/>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg text-white">{t.dashboard.generatorCardTitle}</h3>
+                    <p className="text-sm text-slate-400 mt-1">{t.dashboard.generatorCardDesc}</p>
+                  </div>
+                  <span className="text-sm font-bold text-cyan-400 flex items-center gap-1">{t.dashboard.openStudyTools} <ArrowRight size={14}/></span>
+                </Card>
 
-                  <Card className="p-6 space-y-4 border border-slate-100 bg-white shadow-sm rounded-3xl hover:border-emerald-200 hover:shadow-md transition-all cursor-pointer group" onClick={() => setCurrentRoute('medpatient')}>
-                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Stethoscope size={28}/>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg text-slate-900">{t.dashboard.patientCardTitle}</h3>
-                      <p className="text-sm text-slate-500 mt-1">{t.dashboard.patientCardDesc}</p>
-                    </div>
-                    <span className="text-sm font-bold text-emerald-600 flex items-center gap-1">{t.dashboard.startPatientCase} <ArrowRight size={14}/></span>
-                  </Card>
-                </div>
+                <Card className="p-6 space-y-4 cursor-pointer group md:col-span-2 lg:col-span-2" onClick={() => setCurrentRoute('medpatient')}>
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                    <Stethoscope size={28}/>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg text-white">{t.dashboard.patientCardTitle}</h3>
+                    <p className="text-sm text-slate-400 mt-1">{t.dashboard.patientCardDesc}</p>
+                  </div>
+                  <span className="text-sm font-bold text-emerald-400 flex items-center gap-1">{t.dashboard.startPatientCase} <ArrowRight size={14}/></span>
+                </Card>
               </div>
             )}
 

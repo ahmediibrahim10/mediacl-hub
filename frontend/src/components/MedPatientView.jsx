@@ -159,7 +159,12 @@ Return ONLY a JSON object with this exact structure:
       setPatientMessages([{ role: 'model', content: profile.initial_greeting || `أهلاً يا دكتور.. أنا عندي ${profile.chief_complaint}. إيه اللي حضرتك حابب تسأله؟` }]);
     } catch (err) {
       console.error('Simulation error:', err);
-      setErrorMsg('Failed to initialize patient simulation: ' + err.message);
+      if (err.message.includes('API key not valid') || err.message.includes('API_KEY_INVALID')) {
+        setErrorMsg(appLanguage === 'ar' ? 'مفتاح الـ API غير صالح. يرجى إدخال مفتاح صحيح.' : 'Invalid API Key. Please enter a valid key.');
+        if (onShowKeyModal) onShowKeyModal();
+      } else {
+        setErrorMsg('Failed to initialize patient simulation: ' + err.message);
+      }
     } finally {
       setIsPatientLoading(false);
     }
