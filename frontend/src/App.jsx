@@ -9,7 +9,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Button, Card, ErrorBoundary } from './components/ui';
-import LoadingSpinner from './components/LoadingSpinner';
+import LoadingSpinner from './components/LoadingSpinner.jsx';
 // Lazy‑load heavy route components
 const KnowledgeBrain3D = lazy(() => import('./components/KnowledgeBrain3D'));
 const MedPatientView = lazy(() => import('./components/MedPatientView'));
