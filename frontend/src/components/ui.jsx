@@ -6,7 +6,7 @@ export function Card({ children, className = "", onClick, hover = true }) {
     <motion.div
       onClick={onClick}
       whileHover={hover ? { y: -5, scale: 1.02, transition: { duration: 0.2 } } : {}}
-      className={`bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] shadow-2xl rounded-3xl transition-all duration-300 ${className}`}
+      className={`bg-zinc-900/40 backdrop-blur-xl border border-zinc-800/50 rounded-2xl hover:bg-zinc-900/60 hover:border-zinc-700/50 transition-all duration-300 ${className}`}
     >
       {children}
     </motion.div>
@@ -16,7 +16,7 @@ export function Card({ children, className = "", onClick, hover = true }) {
 export function Button({ children, variant = "primary", className = "", onClick, disabled, icon }) {
   const base = "px-4 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center transition-all duration-300 cursor-pointer disabled:opacity-50 select-none";
   const styles = {
-    primary: "bg-cyan-500 text-slate-950 font-bold hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] border border-transparent",
+    primary: "bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-transparent",
     secondary: "bg-white/[0.05] text-white font-semibold hover:bg-white/[0.1] border border-white/[0.1] shadow-sm",
     danger: "bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/30",
     ghost: "text-white font-semibold hover:text-white hover:bg-white/[0.05]"

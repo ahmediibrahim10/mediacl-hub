@@ -10,6 +10,9 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
+      backgroundImage: {
+        'radial-glow': 'radial-gradient(var(--tw-gradient-stops))',
+      },
     },
   },
   plugins: [],

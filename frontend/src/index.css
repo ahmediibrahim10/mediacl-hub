@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@import "./styles/theme.css";
 @layer utilities {
   /* 3D Animations for Anki Cards */
   .perspective-1000 {

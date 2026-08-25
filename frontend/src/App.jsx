@@ -1181,7 +1181,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
 
   return (
     <ErrorBoundary>
-      <div className="flex h-screen bg-[#0B0F19] text-white font-sans relative overflow-hidden" dir={appLanguage === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="flex h-screen min-h-screen bg-[#09090b] bg-radial-glow from-purple-900/10 to-[#09090b] bg-noise text-white font-sans relative overflow-hidden" dir={appLanguage === 'ar' ? 'rtl' : 'ltr'}>
         
         {/* The "Premium Cyber" Background Blobs */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -1339,7 +1339,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
         )}
 
         {/* Clean White Sidebar */}
-        <aside className="w-20 m-4 flex-shrink-0 bg-[#0B0F19]/80 backdrop-blur-xl border-r border-b border-white/[0.05] text-white rounded-3xl flex flex-col items-center py-6 gap-6 z-20">
+        <aside className="w-20 m-4 flex-shrink-0 bg-[#09090b]/80 backdrop-blur-2xl border-r border-b border-zinc-800/50 text-white rounded-3xl flex flex-col items-center py-6 gap-6 z-20">
           <div className="flex flex-col gap-4 w-full px-3">
             {navItems.map((item) => {
               const isActive = currentRoute === item.id;
