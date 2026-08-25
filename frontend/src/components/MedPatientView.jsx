@@ -158,7 +158,7 @@ Return ONLY a JSON object with this exact structure:
       setPatientSession(profile);
       setPatientMessages([{ role: 'model', content: profile.initial_greeting || `أهلاً يا دكتور.. أنا عندي ${profile.chief_complaint}. إيه اللي حضرتك حابب تسأله؟` }]);
     } catch (err) {
-      console.error('Simulation error:', err);
+      console.error("Virtual Patient API Error:", err);
       if (err.message.includes('API key not valid') || err.message.includes('API_KEY_INVALID')) {
         setErrorMsg(appLanguage === 'ar' ? 'مفتاح الـ API غير صالح. يرجى إدخال مفتاح صحيح.' : 'Invalid API Key. Please enter a valid key.');
         if (onShowKeyModal) onShowKeyModal();
@@ -217,7 +217,7 @@ Return ONLY a JSON object with this exact structure:
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
-        model: "gemini-2.0-flash",
+        model: "gemini-3.6-flash",
         systemInstruction: `You are a patient in an Egyptian clinic speaking natural, authentic Egyptian Arabic dialect.
 Your case profile:
 - Age: ${patientSession.age}, Gender: ${patientSession.gender}
@@ -246,7 +246,7 @@ Stay strictly in character as a regular Egyptian person visiting a clinic/ER. Do
     setLabInput('');
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
       const prompt = `You are a Senior Hospital Radiologist and Clinical Pathology Consultant in Egypt.
 The diagnostic test requested: "${testName}".
 Patient Case Secret Context:
@@ -278,7 +278,7 @@ Provide a realistic lab or imaging report result for "${testName}". Format in fo
     setIsSeniorLoading(true);
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
       const prompt = `You are a friendly Egyptian Senior Medical Resident mentoring a junior student.
 Patient case:
 - True Hidden Diagnosis: ${patientSession.correct_diagnosis}

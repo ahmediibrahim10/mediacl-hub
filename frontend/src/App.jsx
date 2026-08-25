@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import {
   UploadCloud, FileText, Loader2, Play, CheckCircle, ChevronRight,
   Home, Plus, Settings, Moon, Sun,
@@ -9,9 +9,14 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Button, Card, ErrorBoundary } from './components/ui';
-import KnowledgeBrain3D from './components/KnowledgeBrain3D';
-import { MCQRenderer, ClinicalCaseRenderer, SmartSummaryRenderer, AnkiWorkspace } from './components/renderers';
-import MedPatientView from './components/MedPatientView';
+import LoadingSpinner from './components/LoadingSpinner';
+// Lazy‑load heavy route components
+const KnowledgeBrain3D = lazy(() => import('./components/KnowledgeBrain3D'));
+const MedPatientView = lazy(() => import('./components/MedPatientView'));
+const MCQRenderer = lazy(() => import('./components/renderers').then(m => ({ default: m.MCQRenderer })));
+const ClinicalCaseRenderer = lazy(() => import('./components/renderers').then(m => ({ default: m.ClinicalCaseRenderer })));
+const SmartSummaryRenderer = lazy(() => import('./components/renderers').then(m => ({ default: m.SmartSummaryRenderer })));
+const AnkiWorkspace = lazy(() => import('./components/renderers').then(m => ({ default: m.AnkiWorkspace })));
 import { extractTextFromFile } from './utils/pdfExtractor';
 import { NormalizationEngine, safeParseJson } from './utils/normalization';
 
@@ -1379,7 +1384,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                 <span className="text-xs font-bold text-slate-500">LVL {userStats.level}</span>
                 <span className="text-xs font-bold text-slate-800">{userStats.title}</span>
               </div>
-            </div>
+            </div></header>
 
             <div className="flex items-center gap-6">
               {/* XP Progress */}
@@ -1396,21 +1401,21 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-orange-50 border border-orange-100 text-orange-600 font-bold text-sm">
                 🔥 {userStats.streak} 
               </div>
-            </div>
-          </header>
+          </div>
 
           {/* Content View */}
           <div className="flex-1 overflow-y-auto bg-transparent p-4 sm:p-8">
-            <div className="max-w-[1100px] mx-auto">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentRoute}
-                initial={{ opacity: 0, scale: 0.97 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.03 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="h-full"
-              >
+  <div className="max-w-[1100px] mx-auto">
+    <Suspense fallback={<LoadingSpinner />}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentRoute}
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.03 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className="h-full"
+        >
             
             {/* Dashboard View */}
             {currentRoute === 'dashboard' && (
@@ -1569,13 +1574,14 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                         <span className="flex-shrink mx-4 text-xs uppercase font-bold text-slate-400">{t.generator.orPaste}</span>
                         <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
                       </div>
-                      <textarea 
-                        rows={4}
-                        placeholder={t.generator.pastePlaceholder}
-                        value={lectureText}
-                        onChange={e => setLectureText(e.target.value)}
-                        className="w-full p-4 border rounded-2xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500"
-                      />
+                      <select
+                        value={settings.summaryDepth}
+                        onChange={e => setSettings(prev => ({ ...prev, summaryDepth: e.target.value }))}
+                        className="w-full p-2.5 border rounded-xl bg-white/5 border-white/10 text-white placeholder:text-slate-400 focus:border-teal-500"
+                      >
+                        <option className="bg-slate-900 text-white" value="Quick Review">{t.generator.quickReview}</option>
+                        <option className="bg-slate-900 text-white" value="Deep Dive">{t.generator.deepDive}</option>
+                      </select>
                     </div>
                   ) : (
                     <Card className="p-5 flex justify-between items-center bg-teal-50/70 dark:bg-teal-900/20 border-teal-200 dark:border-teal-800">
@@ -1600,18 +1606,18 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
                       {t.generator.settingsTitle}
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      <div>
-                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">{t.generator.difficulty}</label>
-                        <select 
-                          value={settings.difficulty} 
-                          onChange={e => setSettings(prev => ({ ...prev, difficulty: e.target.value }))}
-                          className="w-full p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm outline-none focus:border-teal-500 text-slate-900 dark:text-slate-100"
-                        >
-                          <option value="Easy">{t.generator.easy}</option>
-                          <option value="Medium">{t.generator.medium}</option>
-                          <option value="Hard">{t.generator.hard}</option>
-                        </select>
-                      </div>
+            <div>
+              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 block">{t.generator.difficulty}</label>
+              <select
+                value={settings.difficulty}
+                onChange={e => setSettings(prev => ({ ...prev, difficulty: e.target.value }))}
+                className="w-full p-2.5 border rounded-xl bg-white/5 border-white/10 text-white placeholder:text-slate-400 focus:border-teal-500"
+              >
+                <option className="bg-slate-900 text-white" value="Easy">{t.generator.easy}</option>
+                <option className="bg-slate-900 text-white" value="Medium">{t.generator.medium}</option>
+                <option className="bg-slate-900 text-white" value="Hard">{t.generator.hard}</option>
+              </select>
+            </div>
 
                       {selectedTask === 'summary' && (
                         <div>
@@ -2303,6 +2309,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
 
               </motion.div>
             </AnimatePresence>
+          </Suspense>
           </div>
           </div>
         </main>
