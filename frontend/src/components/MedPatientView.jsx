@@ -135,7 +135,7 @@ export default function MedPatientView({ apiKey, onShowKeyModal, appLanguage = '
 
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
       const prompt = `Generate a realistic clinical case profile for a simulated Egyptian clinic patient in strictly valid JSON format.
 ${specialtyDirective}
 Patient Temperament Style: ${activeTemperament}

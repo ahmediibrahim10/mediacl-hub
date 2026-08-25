@@ -757,7 +757,7 @@ export default function App() {
 
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
       
       let prompt = "";
       const textSnippet = activeText.substring(0, 12000);
@@ -1334,7 +1334,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
         )}
 
         {/* Clean White Sidebar */}
-        <aside className="w-20 m-4 flex-shrink-0 bg-white/90 backdrop-blur-md shadow-sm border border-slate-200 rounded-3xl flex flex-col items-center py-6 gap-6 z-20">
+        <aside className="w-20 m-4 flex-shrink-0 bg-[#0B0F19]/80 backdrop-blur-xl border-r border-b border-white/[0.05] text-white rounded-3xl flex flex-col items-center py-6 gap-6 z-20">
           <div className="flex flex-col gap-4 w-full px-3">
             {navItems.map((item) => {
               const isActive = currentRoute === item.id;
@@ -1370,7 +1370,7 @@ Return a STRICTLY VALID JSON array. Do NOT wrap in markdown blocks like \`\`\`js
         <main className="flex-1 flex flex-col h-screen relative z-10 py-4 pr-4">
           
           {/* Crisp White HUD */}
-          <header className="h-16 flex-shrink-0 bg-white shadow-sm border border-slate-200 rounded-2xl px-8 flex items-center justify-between mb-4">
+          <header className="h-16 flex-shrink-0 bg-[#0B0F19]/80 backdrop-blur-xl border-r border-b border-white/[0.05] text-white px-8 flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <h1 className="font-extrabold text-lg tracking-widest text-slate-900 uppercase">MedOS</h1>
               <div className="h-6 w-px bg-slate-200 mx-2"></div>
