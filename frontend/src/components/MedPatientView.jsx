@@ -153,8 +153,11 @@ Return ONLY a JSON object with this exact structure:
   "correct_treatment": "Aspirin, Clopidogrel, Heparin, Nitroglycerin, serial ECG and Troponin",
   "initial_greeting": "أهلاً يا دكتور.. أنا تعبان أوي وجاي عشان صدري واجعني مش قادر."
 }`;
-      const result = await model.generateContent(prompt);
-      const profile = safeParseJson(result.response.text());
+      let responseText = '';
+      for await (const chunk of await model.streamGenerateContent(prompt)) {
+        responseText += chunk.text();
+      }
+      const profile = safeParseJson(responseText);
       setPatientSession(profile);
       setPatientMessages([{ role: 'model', content: profile.initial_greeting || `أهلاً يا دكتور.. أنا عندي ${profile.chief_complaint}. إيه اللي حضرتك حابب تسأله؟` }]);
     } catch (err) {
@@ -229,8 +232,11 @@ Your case profile:
 Stay strictly in character as a regular Egyptian person visiting a clinic/ER. Do not reveal the correct diagnosis.`
       });
       const conversationContext = newMsgs.map(m => `${m.role === 'user' ? 'Doctor' : 'Patient'}: ${m.content}`).join('\n');
-      const result = await model.generateContent(`Conversation so far:\n${conversationContext}\n\nDoctor asked: "${userText}"\nReply in character as the patient in Egyptian Arabic:`);
-      setPatientMessages([...newMsgs, { role: 'model', content: result.response.text() }]);
+      let responseText = '';
+      for await (const chunk of await model.streamGenerateContent(`Conversation so far:\n${conversationContext}\n\nDoctor asked: "${userText}"\nReply in character as the patient in Egyptian Arabic:`)) {
+        responseText += chunk.text();
+      }
+      setPatientMessages([...newMsgs, { role: 'model', content: responseText }]);
     } catch (err) {
       console.error('Message send error:', err);
       setPatientMessages([...newMsgs, { role: 'model', content: 'عذراً يا دكتور، تعبان ومش قادر أرد دلوقتي.. (خطأ في الاتصال)' }]);
@@ -254,8 +260,11 @@ Patient Case Secret Context:
 - HPI: ${patientSession.hpi}
 - Vitals: ${patientSession.vitals}
 Provide a realistic lab or imaging report result for "${testName}". Format in formal Medical English, include reference ranges if appropriate. Show findings consistent with the true diagnosis when relevant, otherwise show normal results. Keep the report concise (3‑5 lines).`;
-      const result = await model.generateContent(prompt);
-      const labResultText = result.response.text();
+      let responseText = '';
+      for await (const chunk of await model.streamGenerateContent(prompt)) {
+        responseText += chunk.text();
+      }
+      const labResultText = responseText;
       setOrderedLabs(prev => [
         {
           id: Date.now(),
@@ -285,8 +294,11 @@ Patient case:
 - Chief Complaint: ${patientSession.chief_complaint}
 - HPI: ${patientSession.hpi}
 Provide a subtle, high‑yield clinical reasoning hint in conversational Egyptian Arabic mixed with medical English. Keep it concise (2‑3 sentences).`;
-      const result = await model.generateContent(prompt);
-      setSeniorHint(result.response.text());
+      let responseText = '';
+      for await (const chunk of await model.streamGenerateContent(prompt)) {
+        responseText += chunk.text();
+      }
+      setSeniorHint(responseText);
     } catch (err) {
       console.error('Senior consult error:', err);
       alert('Failed to consult senior: ' + err.message);
@@ -302,8 +314,7 @@ Provide a subtle, high‑yield clinical reasoning hint in conversational Egyptia
     }
     setIsPatientLoading(true);
     try {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      // Removed duplicate genAI/model initialization; using the later version.
       const prompt = `You are a medical board examiner evaluating a medical student's diagnosis and treatment of a clinical case.
 Patient True Profile:
 - Correct Diagnosis: ${patientSession.correct_diagnosis}
@@ -321,8 +332,13 @@ Evaluate strictly in valid JSON format:
   "strengths": ["Strength 1", "Strength 2"],
   "missed_points": ["Point to improve"]
 }`;
-      const result = await model.generateContent(prompt);
-      const evalData = safeParseJson(result.response.text());
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
+      let responseText = '';
+      for await (const chunk of await model.streamGenerateContent(prompt)) {
+        responseText += chunk.text();
+      }
+      const evalData = safeParseJson(responseText);
       setEvaluationResult(evalData);
     } catch (err) {
       console.error('Evaluation error:', err);

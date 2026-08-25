@@ -322,14 +322,16 @@ export const SmartSummaryRenderer = ({ data, rawPdfText, apiKey }) => {
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
-        model: "gemini-2.0-flash",
+        model: "gemini-3.6-flash",
         systemInstruction: "You are a top Egyptian medical professor and tutor. Explain medical concepts clearly using friendly Egyptian Arabic mixed with precise English medical terminology. Answer questions based on the provided lecture/summary context."
       });
 
       const promptContext = `Lecture / Summary Context:\n${rawPdfText ? rawPdfText.substring(0, 10000) : JSON.stringify(data)}\n\nConversation History:\n${JSON.stringify(updatedMessages)}\n\nUser Question: ${userMessage}`;
-      const result = await model.generateContent(promptContext);
-      const reply = result.response.text();
-      setMessages([...updatedMessages, { role: 'model', content: reply }]);
+      let responseText = '';
+      for await (const chunk of await model.streamGenerateContent(promptContext)) {
+        responseText += chunk.text();
+      }
+      setMessages([...updatedMessages, { role: 'model', content: responseText }]);
     } catch (err) {
       console.error("Chat error:", err);
       setMessages([...updatedMessages, { role: 'model', content: `عذراً يا دكتور، حدث خطأ أثناء الاتصال بالذكاء الاصطناعي: ${err.message}` }]);
